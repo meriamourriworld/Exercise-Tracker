@@ -50,7 +50,9 @@ app.get("/api/users/:_id/logs", async (req, res)=>
   const {_id} = req.params;
   const {username} = await User.findById(_id);
   const count = await Exercise.find({username: username}).countDocuments();
-  console.log(username + " - " + count)
+  
+  const logs = await Exercise.find({username: username});
+  console.log(logs)
 });
 
 

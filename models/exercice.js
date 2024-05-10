@@ -20,7 +20,6 @@ const exerciseSchema = new Schema({
     date:
     {
         type: Date,
-        default : new Date().toDateString()
     }
 });
 

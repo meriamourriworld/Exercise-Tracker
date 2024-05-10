@@ -35,16 +35,13 @@ app.get("/api/users", async (req, res)=>
 app.post("/api/users/:_id/exercises", async (req, res)=>
 {
   const {_id} = req.params;
-  const {description, duration, date} = req.body;
+  let {description, duration, date} = req.body;
+  date = (!date)? new Date().toDateString() : date;
   const {username} = await User.findById(_id);
-  if(date)
-  {
-    await Exercise.insertMany({username:username, description: description, duration: duration, date:date});
-  }else
-  {
-    await Exercise.insertMany({username:username, description: description, duration: duration});
-  }
 
+  await Exercise.insertMany({username:username, date:date ,duration: duration, description: description});
+  const exercise = await Exercise.findOne({description: description, duration: duration, username: username});
+  res.json(exercise);
 });
 
 const listener = app.listen(process.env.PORT || 3000, () => {

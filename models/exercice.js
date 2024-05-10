@@ -19,7 +19,7 @@ const exerciseSchema = new Schema({
     },
     date:
     {
-        type: Date,
+        type: String,
     }
 });
 

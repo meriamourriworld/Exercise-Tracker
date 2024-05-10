@@ -36,7 +36,7 @@ app.post("/api/users/:_id/exercises", async (req, res)=>
 {
   const {_id} = req.params;
   let {description, duration, date} = req.body;
-  date = (!date)? new Date().toDateString() : date;
+  date = (!date)? new Date().toDateString() : new Date(date).toDateString();
   const {username} = await User.findById(_id);
 
   await Exercise.insertMany({username:username, date:date ,duration: duration, description: description});
@@ -51,8 +51,13 @@ app.get("/api/users/:_id/logs", async (req, res)=>
   const {username} = await User.findById(_id);
   const count = await Exercise.find({username: username}).countDocuments();
   
-  const logs = await Exercise.find({username: username});
-  console.log(logs)
+  const logs = await Exercise.find({username: username},{_id:0, username:0});
+  res.json({
+    username: username,
+    count: count,
+    _id: _id,
+    log: logs
+  });
 });
 
 

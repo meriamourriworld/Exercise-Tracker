@@ -5,6 +5,7 @@ require('dotenv').config();
 const connect = require("./models/connection");
 const User = require("./models/user");
 const Exercise = require("./models/exercice");
+const exercice = require('./models/exercice');
 
 //Configuration
 app.use(cors())
@@ -40,8 +41,17 @@ app.post("/api/users/:_id/exercises", async (req, res)=>
   const {username} = await User.findById(_id);
 
   await Exercise.insertMany({username:username, date:date ,duration: duration, description: description});
-  const exercise = await Exercise.findOne({description: description, duration: duration, username: username});
-  res.json(exercise);
+  const exercise = await Exercise.findOne({description: description, duration: duration, username: username},{__v:0});
+  res.json(
+    {
+      username: username,
+      description: exercise.description,
+      duration: exercise.duration,
+      date: exercice.date,
+      _id: _id
+    }
+    
+  );
 });
 
 

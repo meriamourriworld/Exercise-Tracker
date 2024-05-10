@@ -55,8 +55,11 @@ app.post("/api/users/:_id/exercises", async (req, res)=>
 
 app.get("/api/users/:_id/logs", async (req, res)=>
 {
+  let params = false;
+
   if(req.query.from || req.query.to)
   {
+    params = true;
     from = (new Date(req.query.from)== "Invalid Date")? new Date("1980-01-01").toDateString() : new Date(req.query.from).toDateString();
     to = (new Date(req.query.to)== "Invalid Date")? new Date().toDateString() : new Date(req.query.to).toDateString();
   }
@@ -64,13 +67,25 @@ app.get("/api/users/:_id/logs", async (req, res)=>
   const {username} = await User.findById(_id);
   const count = await Exercise.find({username: username}).countDocuments();
   const {limit = count }  = req.query;
-  const logs = await Exercise.find({username: username},{_id:0, username:0, __v:0});
-  res.json({
-    _id: _id,
-    username: username,
-    count: count,
-    log: logs
-  });
+  if(params){
+    const logs = await Exercise.find({username: username, date:{$ge:from, $le:to}},{_id:0, username:0, __v:0}).limit(limit);
+    res.json({
+      _id: _id,
+      username: username,
+      from : from,
+      to: to,
+      count: count,
+      log: logs
+    });
+  }else{
+    const logs = await Exercise.find({username: username},{_id:0, username:0, __v:0});
+    res.json({
+      _id: _id,
+      username: username,
+      count: count,
+      log: logs
+    });
+  }
 });
 
 

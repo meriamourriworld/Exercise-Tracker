@@ -22,6 +22,8 @@ app.post("/api/users", async (req, res)=>
 {
   const {username} = req.body;
   await User.insertMany({username: username});
+  const user = await User.findOne({username: username});
+  res.json({"username":user.username , "_id": user._id});
 });
 
 

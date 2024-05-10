@@ -43,15 +43,13 @@ app.post("/api/users/:_id/exercises", async (req, res)=>
   await Exercise.insertMany({username:username, date:date ,duration: duration, description: description});
   const exercise = await Exercise.findOne({description: description, duration: duration, username: username},{__v:0});
   res.json(
-    {
+    {      
+      _id: _id,
       username: username,
-      description: exercise.description,
+      date: exercise.date,
       duration: exercise.duration,
-      date: exercice.date,
-      _id: _id
-    }
-    
-  );
+      description: exercise.description
+    });
 });
 
 

@@ -3,7 +3,7 @@ const app = express()
 const cors = require('cors')
 require('dotenv').config();
 const connect = require("./models/connection");
-
+const User = require("./models/user");
 
 
 //Configuration
@@ -12,13 +12,16 @@ app.use(express.static('public'))
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
+app.use(express.urlencoded({extended:true}));
+app.use(express.json());
 //DataBase Connection
 connect;
 
 //Routing
-app.post("/api/users", (req, res)=>
+app.post("/api/users", async (req, res)=>
 {
-
+  const {username} = req.body;
+  await User.insertMany({username: username});
 });
 
 
